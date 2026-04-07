@@ -1,15 +1,15 @@
 class Macrostate:
-    def __init__(self, data: dict):
-        self.data = data
+    def __init__(self, raw_data: dict):
+        self.data = raw_data
     
     @property
     def is_active(self) -> bool:
-        return self.data["isActive"]
+        return self.data.get("isActive", False)
     
     @property
     def title(self) -> str:
-        return self.data["title"]
+        return self.data.get("title")
     
     @property
     def message(self) -> str:
-        return self.data["message"]
+        return self.data.get("message")

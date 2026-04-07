@@ -1,21 +1,26 @@
 import sys
 from terminaltables import AsciiTable
+
 from src.order_status import OrderStatus
+from src.errors import BlueTrackerError
 
 def fetch_order_status(id: int | str) -> OrderStatus:
     order_status = OrderStatus.from_order_id(id)
-    active_macrostate = order_status.get_active_macrostate()
+
+    active_macrostate = order_status.macrostate_info.get_active_macrostate()
 
     title = active_macrostate.title
-    message = active_macrostate.message
+    sender = order_status.core_os.display_name
+    movement_date = order_status.general_info.last_date_movement
+    promise_date = order_status.general_info.promise_date
 
-    return title, message
+    return sender, title, movement_date, promise_date
 
 if __name__ == "__main__":
     ids = sys.argv[1:]
 
     table = [
-        ["ID", "Estado", "Mensaje"],
+        ["ID", "Sender", "Estado", "Fecha y hora", "Entrega estimada"],
     ]
 
     for id in ids:
@@ -23,11 +28,8 @@ if __name__ == "__main__":
         
         try:
             data = fetch_order_status(id)
-        except OrderStatus.Error as e:
-            print(f"Error fetching order {id}: {e}", file=sys.stderr)
-            continue
-        except OrderStatus.NoActiveMacrostateError:
-            print(f"No active macrostate found for order {id}", file=sys.stderr)
+        except BlueTrackerError as e:
+            print(f"Failed to fetch order {id}: {e}", file=sys.stderr)
             continue
         
         table.append([id, *data])

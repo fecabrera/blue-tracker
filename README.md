@@ -1,6 +1,6 @@
 # blue-tracker
 
-Small CLI that looks up [Blue](https://www.blue.cl) order tracking and prints the active macrostate (title and message) in a table.
+Small CLI that looks up [Blue](https://www.blue.cl) order tracking and prints a summary table for each order ID.
 
 ## Setup
 
@@ -25,13 +25,18 @@ Example:
 python app.py 123456789
 ```
 
-Output columns: **ID**, **Estado**, **Mensaje**.
+Output columns:
 
-Errors go to stderr and that order is skipped:
+| Column               | Meaning                                 |
+| -------------------- | --------------------------------------- |
+| **ID**               | Order ID you passed                     |
+| **Sender**           | Carrier / service name (`coreOs`)       |
+| **Estado**           | Title of the active macrostate          |
+| **Fecha y hora**     | Last movement timestamp (`generalInfo`) |
+| **Entrega estimada** | Estimated delivery date (`generalInfo`) |
 
-- API returned a non-success payload (message from the server).
-- No active macrostate in the trace for that order.
+If something goes wrong for an order, a line is printed to **stderr** and that order is skipped. Failures include: HTTP or invalid JSON from the API, API payload with `status` ≠ `ok`, or no active macrostate in the trace.
 
 ## How it works
 
-The app POSTs to `https://www.blue.cl/api/tracking` with the order ID (`os` in the JSON body), parses the response when `status` is `ok`, walks the macrostate trace, and shows the entry marked active.
+The app POSTs to `https://www.blue.cl/api/tracking` with the order ID in the JSON body as `os`, parses the response when `status` is `ok`, and reads macrostate, general info, and core OS from the `data` object.

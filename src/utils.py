@@ -13,4 +13,5 @@ def fetch_api(id: int | str) -> dict:
         "os": id
     }
     response = requests.post(FETCH_URL, json=payload, headers=HEADERS)
+    response.raise_for_status()
     return response.json()
