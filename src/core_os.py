@@ -1,11 +1,7 @@
-class CoreOS:
-    _data: dict
-    _status_code: int
+from src.api_section import ApiSection
 
-    def __init__(self, raw_data: dict):
-        self._data = raw_data["data"]
-        self._status_code = int(raw_data["statusCode"])
-    
+
+class CoreOS(ApiSection):
     @property
     def display_name(self) -> str:
         return self._data.get("displayName")

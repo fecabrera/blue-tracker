@@ -1,14 +1,11 @@
+from src.api_section import ApiSection
 from src.errors import NoActiveMacrostateError
 from src.macrostate import Macrostate
 
-class MacrostateInfo:
-    _data: dict
-    _status_code: int
 
-    def __init__(self, raw_data: dict):
-        self._data = raw_data["data"]
-        self._status_code = int(raw_data["statusCode"])
-
+class MacrostateInfo(ApiSection):
+    def __init__(self, raw_data: dict) -> None:
+        super().__init__(raw_data)
         self.macrostates = [
             Macrostate(state) for state in self._data["traceMacrostates"]["macrostates"]
         ]

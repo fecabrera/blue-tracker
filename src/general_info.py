@@ -1,11 +1,7 @@
-class GeneralInfo:
-    _data: dict
-    _status_code: int
+from src.api_section import ApiSection
 
-    def __init__(self, raw_data: dict):
-        self._data = raw_data["data"]
-        self._status_code = int(raw_data["statusCode"])
-    
+
+class GeneralInfo(ApiSection):
     @property
     def creation_date(self) -> str:
         return self._data.get("creationDate")
