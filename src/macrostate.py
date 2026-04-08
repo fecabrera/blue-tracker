@@ -13,3 +13,11 @@ class Macrostate:
     @property
     def message(self) -> str:
         return self.data.get("message")
+
+    @property
+    def has_exception(self) -> bool:
+        return self.data.get("isException", False)
+    
+    @property
+    def exception_type(self) -> str:
+        return self.data.get("exceptionType")
